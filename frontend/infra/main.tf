@@ -5,7 +5,7 @@ locals {
 
 ## <https://www.terraform.io/docs/providers/azurerm/r/resource_group.html>
 resource "azurerm_resource_group" "rg" {
-  name     = "${local.env_prefix}-rg"
+  name     = "${local.env_prefix}-frontend-rg"
   location = var.location
   tags = {
     environment = var.environment
@@ -80,27 +80,4 @@ resource "azurerm_cdn_endpoint" "cdn_resume" {
     }
   }
 
-
-# Here it gets messy... using local provisioners to set custom domain and enable HTTPS for the CDN endpoint
-
-  provisioner "local-exec" {
-    command = <<EOT
-    az cdn custom-domain create \
-    --endpoint-name ${azurerm_cdn_endpoint.cdn_resume.name} \
-    --hostname ${var.custom_domain} \
-    --resource-group ${azurerm_resource_group.rg.name} \
-    --profile-name ${azurerm_cdn_profile.cdn.name} \
-    -n ${var.projectname}
-    EOT
-    }
-
-  provisioner "local-exec" {
-    command = <<EOT
-    az cdn custom-domain enable-https \
-    --endpoint-name ${azurerm_cdn_endpoint.cdn_resume.name} \
-    --resource-group ${azurerm_resource_group.rg.name} \
-    --profile-name ${azurerm_cdn_profile.cdn.name} \
-    -n ${var.projectname}
-    EOT
-  }
 }
