@@ -78,7 +78,7 @@ jobs:
           azcliversion: 2.23.0
           inlineScript: |
             
-            az storage blob upload-batch --source website --account-name ${{needs.terraform.outputs.saname}} -d '$web'
+            az storage blob upload-batch --source frontend/website --account-name ${{needs.terraform.outputs.saname}} -d '$web'
 
       - name: Purge the CDN Endpoint to make the new content available
         uses: azure/CLI@v1
