@@ -1,0 +1,42 @@
+name: build_backend_infrastructure 
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+        - 'backend/**'
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    
+    env:
+      ARM_CLIENT_ID: ${{secrets.TF_ARM_CLIENT_ID}}
+      ARM_CLIENT_SECRET: ${{secrets.TF_ARM_CLIENT_SECRET}}
+      ARM_SUBSCRIPTION_ID: ${{secrets.TF_SUBSCRIPTION_ID}}
+      ARM_TENANT_ID: ${{secrets.TF_TENANT_ID}}
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      
+      - name: Setup Terraform
+        id: setup_terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_wrapper: false
+       
+      - name: Terraform Init for backend resources
+        id: init_terraform_backend
+        run: terraform -chdir=backend/infra init
+
+      - name: Terraform Apply for backend resources
+        id: apply_terraform_backend
+        run: terraform -chdir=backend/infra apply -auto-approve
+  
+      
