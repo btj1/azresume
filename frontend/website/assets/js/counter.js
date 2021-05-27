@@ -2,7 +2,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     getVisitorCount();
 });
 
-const apipath = 'https://visitorcountbtjaz.azurewebsites.net/api/counterapi'
+const apipath = 'https://visitorcountbtjaz2.azurewebsites.net/api/counterapi'
 const getVisitorCount = () => {
     let currentcount = 0;
 
