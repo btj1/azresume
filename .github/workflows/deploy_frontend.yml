@@ -39,11 +39,11 @@ jobs:
        
       - name: Terraform Init
         id: init_terraform
-        run: terraform -chdir=infra init
+        run: terraform -chdir=frontend/infra init
 
       - name: Terraform Apply
         id: apply_terraform
-        run: terraform -chdir=infra apply -auto-approve
+        run: terraform -chdir=frontend/infra apply -auto-approve
   
       - name: get terraform output 
         id: get_tf_output
