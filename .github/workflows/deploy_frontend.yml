@@ -83,9 +83,7 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: configure cdn https & certificate
-          id: configure_cdn
-          uses: azure/CLI@v1
-                  
+        uses: azure/CLI@v1
         with:
           azcliversion: 2.23.0
           inlineScript: |
