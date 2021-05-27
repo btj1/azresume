@@ -17,3 +17,6 @@ output "cdn_profile_name" {
 output "cdn_endpoint_hostname" {
   value = azurerm_cdn_endpoint.cdn_resume.host_name
 }
+output "custom_domain" {
+  value = var.custom_domain
+}

@@ -15,7 +15,7 @@ jobs:
       rg_name: ${{ steps.get_tf_output.outputs.RG_NAME}}
       cdn_endpoint: ${{ steps.get_tf_output.outputs.CDN_ENDPOINT_NAME}}
       cdn_profile: ${{ steps.get_tf_output.outputs.CDN_PROFILE_NAME}}
-
+      custom_domain: ${{ steps.get_tf_output.outputs.CUSTOM_DOMAIN}}
     env:
       ARM_CLIENT_ID: ${{secrets.TF_ARM_CLIENT_ID}}
       ARM_CLIENT_SECRET: ${{secrets.TF_ARM_CLIENT_SECRET}}
@@ -37,22 +37,73 @@ jobs:
         with:
           terraform_wrapper: false
        
-      - name: Terraform Init
-        id: init_terraform
+      - name: Terraform Init for Frontend resources
+        id: init_terraform_frontend
         run: terraform -chdir=frontend/infra init
 
-      - name: Terraform Apply
-        id: apply_terraform
+      - name: Terraform Apply for Frontend resources
+        id: apply_terraform_frontend
         run: terraform -chdir=frontend/infra apply -auto-approve
   
-      - name: get terraform output 
-        id: get_tf_output
+      - name: get terraform output for frontend resources
+        id: get_tf_output_frontend
         run: |
           echo "::set-output name=ST_NAME::$( terraform -chdir=frontend/infra output storage_account_name )"
           echo "::set-output name=RG_NAME::$( terraform -chdir=frontend/infra output az_resume_rg )"
           echo "::set-output name=CDN_ENDPOINT_NAME::$( terraform -chdir=frontend/infra output cdn_endpoint_name )"
           echo "::set-output name=CDN_PROFILE_NAME::$( terraform -chdir=frontend/infra output cdn_profile_name )"
-  
+          echo "::set-output name=CUSTOM_DOMAIN::$( terraform -chdir=frontend/infra output custom_domain )"
+
+  set_custom_domain:
+    runs-on: ubuntu-latest
+    needs: terraform
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-central-1
+
+      - name: Terraform Init for Frontend resources
+        id: init_terraform_frontend
+        run: terraform -chdir=DNS init
+
+      - name: Terraform Apply for DNS record
+        id: apply_terraform_frontend
+        run: terraform -chdir=DNS apply -auto-approve
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: configure cdn https & certificate
+          id: configure_cdn
+          uses: azure/CLI@v1
+                  
+        with:
+          azcliversion: 2.23.0
+          inlineScript: |
+            
+            az cdn custom-domain create \
+            --endpoint-name ${{needs.terraform.outputs.cdn_endpoint}} \
+            --hostname ${{needs.terraform.outputs.custom_domain}} \
+            --resource-group  ${{needs.terraform.outputs.rg_name}} \
+            --profile-name  ${{needs.terraform.outputs.cdn_profile}} \
+            -n ${{needs.terraform.outputs.cdn_profile}}
+
+             az cdn custom-domain create \
+            --endpoint-name ${{needs.terraform.outputs.cdn_endpoint}} \
+            --hostname ${{needs.terraform.outputs.custom_domain}} \
+            --resource-group  ${{needs.terraform.outputs.rg_name}} \
+            --profile-name  ${{needs.terraform.outputs.cdn_profile}} \
+            -n ${{needs.terraform.outputs.cdn_profile}}
+
   upload:
     runs-on: ubuntu-latest
     needs: terraform
@@ -79,7 +130,7 @@ jobs:
           inlineScript: |
             
             az storage blob upload-batch --source frontend/website --account-name ${{needs.terraform.outputs.saname}} -d '$web'
-
+      
       - name: Purge the CDN Endpoint to make the new content available
         uses: azure/CLI@v1
         with:
