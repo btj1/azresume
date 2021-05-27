@@ -11,11 +11,11 @@ jobs:
     runs-on: ubuntu-latest
 
     outputs:
-      saname: ${{ steps.get_tf_output.outputs.ST_NAME}}
-      rg_name: ${{ steps.get_tf_output.outputs.RG_NAME}}
-      cdn_endpoint: ${{ steps.get_tf_output.outputs.CDN_ENDPOINT_NAME}}
-      cdn_profile: ${{ steps.get_tf_output.outputs.CDN_PROFILE_NAME}}
-      custom_domain: ${{ steps.get_tf_output.outputs.CUSTOM_DOMAIN}}
+      saname: ${{ steps.get_tf_output_frontend.outputs.ST_NAME}}
+      rg_name: ${{ steps.get_tf_output_frontend.outputs.RG_NAME}}
+      cdn_endpoint: ${{ steps.get_tf_output_frontend.outputs.CDN_ENDPOINT_NAME}}
+      cdn_profile: ${{ steps.get_tf_output_frontend.outputs.CDN_PROFILE_NAME}}
+      custom_domain: ${{ steps.get_tf_output_frontend.outputs.CUSTOM_DOMAIN}}
     env:
       ARM_CLIENT_ID: ${{secrets.TF_ARM_CLIENT_ID}}
       ARM_CLIENT_SECRET: ${{secrets.TF_ARM_CLIENT_SECRET}}
