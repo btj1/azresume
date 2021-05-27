@@ -1,0 +1,8 @@
+projectname         = "azureresume"
+custom_domain       = "azresumebtj.cloudybtj.de"
+environment         = "dev"
+location            = "West Europe"
+location_short_code = "weeu"
+appversion          = "0.1"
+cdn_profile         = "azureresbtj"
+cdn_endpoint_name   = "azureresbtjendpoint"

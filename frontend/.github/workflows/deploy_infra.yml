@@ -1,0 +1,89 @@
+name: build_infrastructure and upload website 
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    outputs:
+      saname: ${{ steps.get_tf_output.outputs.ST_NAME}}
+      rg_name: ${{ steps.get_tf_output.outputs.RG_NAME}}
+      cdn_endpoint: ${{ steps.get_tf_output.outputs.CDN_ENDPOINT_NAME}}
+      cdn_profile: ${{ steps.get_tf_output.outputs.CDN_PROFILE_NAME}}
+
+    env:
+      ARM_CLIENT_ID: ${{secrets.TF_ARM_CLIENT_ID}}
+      ARM_CLIENT_SECRET: ${{secrets.TF_ARM_CLIENT_SECRET}}
+      ARM_SUBSCRIPTION_ID: ${{secrets.TF_SUBSCRIPTION_ID}}
+      ARM_TENANT_ID: ${{secrets.TF_TENANT_ID}}
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      
+      - name: Setup Terraform
+        id: setup_terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_wrapper: false
+       
+      - name: Terraform Init
+        id: init_terraform
+        run: terraform -chdir=infra init
+
+      - name: Terraform Apply
+        id: apply_terraform
+        run: terraform -chdir=infra apply -auto-approve
+  
+      - name: get terraform output 
+        id: get_tf_output
+        run: |
+          echo "::set-output name=ST_NAME::$( terraform -chdir=infra output storage_account_name )"
+          echo "::set-output name=RG_NAME::$( terraform -chdir=infra output az_resume_rg )"
+          echo "::set-output name=CDN_ENDPOINT_NAME::$( terraform -chdir=infra output cdn_endpoint_name )"
+          echo "::set-output name=CDN_PROFILE_NAME::$( terraform -chdir=infra output cdn_profile_name )"
+  
+  upload:
+    runs-on: ubuntu-latest
+    needs: terraform
+
+    env:
+      ARM_CLIENT_ID: ${{secrets.TF_ARM_CLIENT_ID}}
+      ARM_CLIENT_SECRET: ${{secrets.TF_ARM_CLIENT_SECRET}}
+      ARM_SUBSCRIPTION_ID: ${{secrets.TF_SUBSCRIPTION_ID}}
+      ARM_TENANT_ID: ${{secrets.TF_TENANT_ID}}
+
+    steps:  
+      - uses: actions/checkout@v2  
+      
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+
+      - name: upload to blob storage
+        uses: azure/CLI@v1
+        with:
+          azcliversion: 2.23.0
+          inlineScript: |
+            
+            az storage blob upload-batch --source website --account-name ${{needs.terraform.outputs.saname}} -d '$web'
+
+      - name: Purge the CDN Endpoint to make the new content available
+        uses: azure/CLI@v1
+        with:
+          azcliversion: 2.23.0
+          inlineScript: |
+            
+            az cdn endpoint purge --resource-group ${{needs.terraform.outputs.rg_name}} --content-paths "/*" --profile-name ${{needs.terraform.outputs.cdn_profile}} --name ${{needs.terraform.outputs.cdn_endpoint}} --no-wait
+
+
