@@ -9,7 +9,8 @@ on:
 jobs:
   unittests:
     runs-on: ubuntu-latest
-    
+ #   env:
+  #    working-directory: /home/runner/work/azresume/azresume/backend/counterapi 
     steps:
       - uses: actions/checkout@v2
 
@@ -25,6 +26,7 @@ jobs:
 
       - name: Test Function Code
         run: |
+            cd backend/counterapi
             python -m unittest discover
   
   zipfile:
@@ -38,7 +40,7 @@ jobs:
       - uses: papeloto/action-zip@v1
         with:
           files: backend/counterapi/counterapi/ backend/counterapi/host.json backend/counterapi/package.json backend/counterapi/proxies.json backend/counterapi/requirements.txt
-          dest: counterapi/counterapi.zip
+          dest: counterapi.zip
   
       - uses: actions/upload-artifact@v1
         with:
