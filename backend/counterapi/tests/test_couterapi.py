@@ -1,6 +1,4 @@
 import unittest
-import requests
-import json
 import azure.functions as func
 import counterapi
 from counterapi import main

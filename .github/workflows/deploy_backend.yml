@@ -27,7 +27,7 @@ jobs:
 
       - name: Test Function Code
         run: |
-            python -m unittest test_counterapi.py
+            python -m unittest tests/test_counterapi.py
   terraform:
     runs-on: ubuntu-latest
 
