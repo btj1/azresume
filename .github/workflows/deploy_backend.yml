@@ -9,8 +9,7 @@ on:
 jobs:
   unittests:
     runs-on: ubuntu-latest
-
- 
+    
     steps:
       - uses: actions/checkout@v2
 
@@ -55,7 +54,7 @@ jobs:
         id: init_terraform_backend
 
         run: 
-          pwd
+          
           terraform -chdir=backend/infra init
 
       - name: Terraform Apply for backend resources
