@@ -16,13 +16,15 @@ jobs:
       ARM_SUBSCRIPTION_ID: ${{secrets.TF_SUBSCRIPTION_ID}}
       ARM_TENANT_ID: ${{secrets.TF_TENANT_ID}}
 
+
+  unittests:
     steps:
       - uses: actions/checkout@v2
 
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
-        python-version: '3.x'
+        python-version: '3.8'
       
       - name: Install dependencies
         run: |
@@ -32,7 +34,8 @@ jobs:
       - name: Test Function Code
         run: |
             python -m unittest backend/counterapi/tests/test_counterapi.py
-      
+  terraform:
+    steps:    
       - name: Azure Login
         uses: azure/login@v1
         with:
