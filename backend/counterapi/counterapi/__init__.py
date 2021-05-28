@@ -1,6 +1,6 @@
 import logging
 import azure.functions as func
-#
+
 def main(req: func.HttpRequest, readcounter: func.DocumentList, writecounter: func.Out[func.Document]) -> func.HttpResponse:
     logging.info('Website was visited.')
 
@@ -15,3 +15,4 @@ def main(req: func.HttpRequest, readcounter: func.DocumentList, writecounter: fu
         
         writecounter.set(readcounter[0])
         return func.HttpResponse(str(readcounter[0]['count']),status_code=200)
+#
