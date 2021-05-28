@@ -29,7 +29,7 @@ jobs:
             python -m unittest discover
   terraform:
     runs-on: ubuntu-latest
-
+    
     env:
 
       ARM_CLIENT_ID: ${{secrets.TF_ARM_CLIENT_ID}}
@@ -37,7 +37,9 @@ jobs:
       ARM_SUBSCRIPTION_ID: ${{secrets.TF_SUBSCRIPTION_ID}}
       ARM_TENANT_ID: ${{secrets.TF_TENANT_ID}}
       
-    steps:    
+    steps:   
+      - uses: actions/checkout@v2 
+      
       - name: Azure Login
         uses: azure/login@v1
         with:
