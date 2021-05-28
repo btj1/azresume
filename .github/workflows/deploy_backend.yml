@@ -26,6 +26,19 @@ jobs:
       - name: Test Function Code
         run: |
             python -m unittest discover
+  zipfile:
+
+    runs-on: ubuntu-latest
+    env:
+    working-directory: backend/
+    steps:
+      - uses: actions/checkout@v2
+      - uses: papeloto/action-zip@v1
+        with:
+          files: counterapi/ host.json package.json proxies.json requirements.txt
+          dest: counterapi/counterapi.zip
+  
+  
   terraform:
     runs-on: ubuntu-latest
     
