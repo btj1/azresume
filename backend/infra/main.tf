@@ -138,6 +138,11 @@ resource "azurerm_function_app" "counterapi" {
         WEBSITE_RUN_FROM_PACKAGE = "https://${azurerm_storage_account.azfuncsa.name}.blob.core.windows.net/${azurerm_storage_container.counterapideployment.name}/${azurerm_storage_blob.funccode.name}${data.azurerm_storage_account_sas.sasaccess.sas}"
         CosmosDbConnectionString = azurerm_cosmosdb_account.counterdb.connection_strings[0]
     }
+ # site_config {
+ #   cors {
+ #     allowed_origins = *
 
+  #  }
+ # } 
 }
 
