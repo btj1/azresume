@@ -9,6 +9,9 @@ on:
 jobs:
   unittests:
     runs-on: ubuntu-latest
+
+    env:
+      working-directory : backend/counterapi
     steps:
       - uses: actions/checkout@v2
 
@@ -24,7 +27,7 @@ jobs:
 
       - name: Test Function Code
         run: |
-            python -m unittest backend/counterapi/tests/test_counterapi.py
+            python -m unittest test_counterapi.py
   terraform:
     runs-on: ubuntu-latest
 
