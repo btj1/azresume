@@ -30,13 +30,13 @@ jobs:
   zipfile:
 
     runs-on: ubuntu-latest
-    env:
-      working-directory: /home/runner/work/azresume/azresume/backend/counterapi
+   # env:
+     # working-directory: /home/runner/work/azresume/azresume/backend/counterapi
     steps:
       - uses: actions/checkout@v2
       - uses: papeloto/action-zip@v1
         with:
-          files: counterapi/ host.json package.json proxies.json requirements.txt
+          files: backend/counterapi/counterapi/ backend/counterapi/host.json backend/counterapi/package.json backend/counterapi/proxies.json backend/counterapi/requirements.txt
           dest: counterapi/counterapi.zip
   
   
