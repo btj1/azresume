@@ -15,4 +15,3 @@ def main(req: func.HttpRequest, readcounter: func.DocumentList, writecounter: fu
         
         writecounter.set(readcounter[0])
         return func.HttpResponse(str(readcounter[0]['count']),status_code=200)
-#

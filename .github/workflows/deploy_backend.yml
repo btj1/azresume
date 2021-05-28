@@ -43,8 +43,6 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      
-      
       - name: Setup Terraform
         id: setup_terraform
         uses: hashicorp/setup-terraform@v1
@@ -53,7 +51,10 @@ jobs:
        
       - name: Terraform Init for backend resources
         id: init_terraform_backend
-        run: terraform -chdir=backend/infra init
+
+        run: 
+          pwd
+          terraform -chdir=backend/infra init
 
       - name: Terraform Apply for backend resources
         id: apply_terraform_backend
