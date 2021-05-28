@@ -30,6 +30,7 @@ jobs:
   zipfile:
 
     runs-on: ubuntu-latest
+    needs: unittests
    # env:
      # working-directory: /home/runner/work/azresume/azresume/backend/counterapi
     steps:
@@ -39,10 +40,14 @@ jobs:
           files: backend/counterapi/counterapi/ backend/counterapi/host.json backend/counterapi/package.json backend/counterapi/proxies.json backend/counterapi/requirements.txt
           dest: counterapi/counterapi.zip
   
+      - uses: actions/upload-artifact@v1
+          with:
+          name: my-artifact
+          path: ${{ github.workspace }}/counterapiy.zip
   
   terraform:
     runs-on: ubuntu-latest
-    
+    needs: zipfile
     env:
 
       ARM_CLIENT_ID: ${{secrets.TF_ARM_CLIENT_ID}}
