@@ -41,7 +41,7 @@ jobs:
           dest: counterapi/counterapi.zip
   
       - uses: actions/upload-artifact@v1
-          with:
+        with:
           name: my-artifact
           path: ${{ github.workspace }}/counterapiy.zip
   
