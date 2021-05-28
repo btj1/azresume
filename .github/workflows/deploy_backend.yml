@@ -43,7 +43,7 @@ jobs:
       - uses: actions/upload-artifact@v1
         with:
           name: my-artifact
-          path: ${{ github.workspace }}/counterapiy.zip
+          path: ${{ github.workspace }}/counterapi.zip
   
   terraform:
     runs-on: ubuntu-latest
