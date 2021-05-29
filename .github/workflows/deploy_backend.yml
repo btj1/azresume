@@ -46,7 +46,7 @@ jobs:
       - uses: actions/upload-artifact@v1
         with:
           name: counterapi.zip
-          path: ${{ github.workspace }}/counterapi.zip
+          path: ${{ github.workspace }}/backend/counterapi/counterapi.zip
   
   terraform:
     runs-on: ubuntu-latest
