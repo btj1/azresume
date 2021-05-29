@@ -35,8 +35,9 @@ jobs:
     needs: unittests
     
     steps:
+      - uses: actions/checkout@v2-
+
       - name: Create Zipfile
-        uses: actions/checkout@v2
         run: |
             cd backend/counterapi    
             zip -r counterapi.zip counterapi/ host.json package.json proxies.json requirements.txt
