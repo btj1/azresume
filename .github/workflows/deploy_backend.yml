@@ -65,7 +65,7 @@ jobs:
         with:
           name: counterapi.zip
       - name: check path
-          run: |
+        run: |
           ls -l
 
       - name: Azure Login
