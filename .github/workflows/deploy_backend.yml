@@ -61,6 +61,13 @@ jobs:
     steps:   
       - uses: actions/checkout@v2 
       
+      - uses: actions/download-artifact@v2
+        with:
+          name: counterapi.zip
+      - name: check path
+          run: |
+          ls -l
+
       - name: Azure Login
         uses: azure/login@v1
         with:
