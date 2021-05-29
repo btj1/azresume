@@ -27,10 +27,3 @@ class test_counterapi(unittest.TestCase):
         self.assertEqual(
             int(resp.get_body()),3
         )
-
-
-        # Check the output.
-  #      self.assertEqual(
-   #         resp.get_body(), 
-    ##        'Hello, Test!',
-    #    )
