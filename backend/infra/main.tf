@@ -140,7 +140,7 @@ resource "azurerm_function_app" "counterapi" {
     }
   site_config {
     cors {
-      allowed_origins = [var.custom_domain]
+      allowed_origins = ["https://${var.custom_domain}]
     }
   } 
 }
