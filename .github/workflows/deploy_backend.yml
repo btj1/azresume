@@ -88,6 +88,6 @@ jobs:
 
       - name: Terraform Apply for backend resources
         id: apply_terraform_backend
-        run: terraform -chdir=backend/infra  apply -var='func_source=counterapi.zip' -auto-approve
+        run: terraform -chdir=backend/infra  apply -var='func_source=../../counterapi.zip' -auto-approve
   
       
