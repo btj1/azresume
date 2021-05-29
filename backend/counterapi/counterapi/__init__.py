@@ -5,13 +5,12 @@ def main(req: func.HttpRequest, readcounter: func.DocumentList, writecounter: fu
     logging.info('Website was visited.')
 
     if not readcounter:
-        logging.warning("Counter not found")
+        logging.warning("Counter not found, please check backend config")
         return func.HttpResponse("No counter",status_code=500)
+    
     else:
 
-        logging.info("Found Counter")
-        
+        logging.info("Found Counter, processing visit")
         readcounter[0]['count'] = readcounter[0]['count'] + 1
-        
         writecounter.set(readcounter[0])
         return func.HttpResponse(str(readcounter[0]['count']),status_code=200)

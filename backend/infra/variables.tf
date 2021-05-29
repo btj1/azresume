@@ -37,3 +37,10 @@ variable "func_source" {
   type        = string
   description = "Source path to AZ Func files"
 }
+
+variable "custom_domain" {
+  type        = string
+  description = "Custom domain this website is reachable on"
+}
+
+
