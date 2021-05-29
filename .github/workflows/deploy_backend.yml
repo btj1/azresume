@@ -41,6 +41,7 @@ jobs:
         run: |
             cd backend/counterapi    
             zip -r counterapi.zip counterapi/ host.json package.json proxies.json requirements.txt
+            pwd
   
       - uses: actions/upload-artifact@v1
         with:
